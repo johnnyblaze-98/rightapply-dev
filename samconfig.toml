@@ -1,0 +1,19 @@
+version = 0.1
+
+[default]
+stack_name = "rightapply-dev"
+region = "us-east-1"
+confirm_changeset = true
+capabilities = "CAPABILITY_IAM"
+parameter_overrides = "DDBTableName=rightapply-registrations S3BucketName=rightapply-raw-data-bucket SecretPrefix=rightapply/registration FrontendOrigin=https://rightapply.ai"
+
+[default.deploy.parameters]
+stack_name = "rightapply-dev"
+resolve_s3 = true
+s3_prefix = "rightapply-dev"
+region = "us-east-1"
+confirm_changeset = true
+capabilities = "CAPABILITY_IAM"
+disable_rollback = true
+parameter_overrides = "DDBTableName=\"rightapply-registrations\" S3BucketName=\"rightapply-raw-data-bucket\" SecretPrefix=\"rightapply/registration\" FrontendOrigin=\"https://rightapply.ai\""
+image_repositories = []

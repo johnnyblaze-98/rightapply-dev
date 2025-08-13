@@ -106,7 +106,7 @@ const RegistrationPage = () => {
   const [errors, setErrors] = useState({});
 
   // API configuration
-  const API_BASE = import.meta?.env?.VITE_API_BASE || process.env.REACT_APP_API_BASE;
+  const API_BASE = import.meta.env.VITE_API_BASE;
 
   const [formData, setFormData] = useState({
     // Personal Information

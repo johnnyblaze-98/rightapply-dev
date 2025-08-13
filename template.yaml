@@ -39,6 +39,7 @@ Resources:
   # DynamoDB Table
   RegistrationsTable:
     Type: AWS::DynamoDB::Table
+    DeletionPolicy: Retain
     Properties:
       TableName: !Ref DDBTableName
       BillingMode: PAY_PER_REQUEST
@@ -59,6 +60,7 @@ Resources:
   # S3 Bucket
   RawDataBucket:
     Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
     Properties:
       BucketName: !Ref S3BucketName
       VersioningConfiguration:
@@ -131,12 +133,6 @@ Resources:
             ApiId: !Ref RegistrationApi
             Path: /registrations
             Method: get
-        QueryRegistrationsOptions:
-          Type: HttpApi
-          Properties:
-            ApiId: !Ref RegistrationApi
-            Path: /registrations
-            Method: options
         GetRegistrationOptions:
           Type: HttpApi
           Properties:
@@ -151,6 +147,9 @@ Resources:
       CorsConfiguration:
         AllowOrigins:
           - !Ref FrontendOrigin
+          - http://localhost:5176
+          - http://127.0.0.1:5176
+          - http://127.0.0.1:5175
         AllowMethods:
           - GET
           - POST
