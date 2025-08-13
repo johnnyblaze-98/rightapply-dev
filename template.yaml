@@ -1,0 +1,183 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Registration system with DynamoDB, S3, and Secrets Manager
+
+Parameters:
+  DDBTableName:
+    Type: String
+    Default: rightapply-registrations
+    Description: DynamoDB table name for registrations
+  
+  S3BucketName:
+    Type: String
+    Default: rightapply-raw-data-bucket
+    Description: S3 bucket for raw JSON storage
+  
+  SecretPrefix:
+    Type: String
+    Default: rightapply/registration
+    Description: Secrets Manager prefix for passwords
+  
+  FrontendOrigin:
+    Type: String
+    Default: https://rightapply.ai
+    Description: CORS allowed origin for frontend
+
+Globals:
+  Function:
+    Timeout: 30
+    Runtime: nodejs18.x
+    Environment:
+      Variables:
+        TABLE_NAME: !Ref DDBTableName
+        RAW_BUCKET: !Ref S3BucketName
+        SECRET_PREFIX: !Ref SecretPrefix
+        CORS_ORIGIN: !Ref FrontendOrigin
+        USE_GSI_BY_DATE: "false"
+
+Resources:
+  # DynamoDB Table
+  RegistrationsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Ref DDBTableName
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+      Tags:
+        - Key: Purpose
+          Value: RegistrationSystem
+        - Key: Environment
+          Value: Production
+
+  # S3 Bucket
+  RawDataBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref S3BucketName
+      VersioningConfiguration:
+        Status: Enabled
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      Tags:
+        - Key: Purpose
+          Value: RegistrationRawData
+        - Key: Environment
+          Value: Production
+
+  # Lambda Functions
+  SaveRegistrationFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambda/
+      Handler: save.handler
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref RegistrationsTable
+        - S3WritePolicy:
+            BucketName: !Ref RawDataBucket
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - secretsmanager:CreateSecret
+                - secretsmanager:TagResource
+              Resource: !Sub 'arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:${SecretPrefix}/*'
+      Events:
+        SaveRegistration:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref RegistrationApi
+            Path: /registrations
+            Method: post
+        SaveRegistrationOptions:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref RegistrationApi
+            Path: /registrations
+            Method: options
+
+  QueryRegistrationFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambda/
+      Handler: query.handler
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref RegistrationsTable
+      Events:
+        GetRegistration:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref RegistrationApi
+            Path: /registrations/{id}
+            Method: get
+        ListRegistrations:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref RegistrationApi
+            Path: /registrations
+            Method: get
+        QueryRegistrationsOptions:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref RegistrationApi
+            Path: /registrations
+            Method: options
+        GetRegistrationOptions:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref RegistrationApi
+            Path: /registrations/{id}
+            Method: options
+
+  # HTTP API Gateway
+  RegistrationApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      CorsConfiguration:
+        AllowOrigins:
+          - !Ref FrontendOrigin
+        AllowMethods:
+          - GET
+          - POST
+          - OPTIONS
+        AllowHeaders:
+          - Content-Type
+          - Idempotency-Key
+        MaxAge: 86400
+      Tags:
+        Purpose: RegistrationAPI
+        Environment: Production
+
+Outputs:
+  ApiEndpoint:
+    Description: "HTTP API Gateway endpoint URL"
+    Value: !Sub "https://${RegistrationApi}.execute-api.${AWS::Region}.amazonaws.com"
+    Export:
+      Name: !Sub "${AWS::StackName}-ApiEndpoint"
+  
+  DynamoDBTable:
+    Description: "DynamoDB table name"
+    Value: !Ref RegistrationsTable
+    Export:
+      Name: !Sub "${AWS::StackName}-DynamoDBTable"
+  
+  S3Bucket:
+    Description: "S3 bucket name"
+    Value: !Ref RawDataBucket
+    Export:
+      Name: !Sub "${AWS::StackName}-S3Bucket"
