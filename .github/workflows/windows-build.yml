@@ -16,6 +16,14 @@ jobs:
         with:
           flutter-version: '3.22.1'
 
+      - name: Debug: list repo and project files
+        run: |
+          echo "PWD: $(pwd)"
+          echo "Root listing:"; ls -la
+          echo "Marketing Companion listing:"; ls -la "Marketing Companion" || true
+          echo "pubspec content:"; cat "Marketing Companion/pubspec.yaml" || true
+
+
       - name: Enable windows desktop
         run: cd 'Marketing Companion' && flutter config --enable-windows-desktop
 
