@@ -10,6 +10,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          path: repo
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
@@ -20,24 +22,25 @@ jobs:
         run: |
           echo "PWD: $(pwd)"
           echo "Root listing:"; ls -la
-          echo "Marketing Companion listing:"; ls -la "Marketing Companion" || true
-          echo "pubspec content:"; cat "Marketing Companion/pubspec.yaml" || true
+          echo "repo listing:"; ls -la repo || true
+          echo "Marketing Companion listing:"; ls -la "repo/Marketing Companion" || true
+          echo "pubspec content:"; cat "repo/Marketing Companion/pubspec.yaml" || true
 
 
       - name: Enable windows desktop
-        run: cd 'Marketing Companion' && flutter config --enable-windows-desktop
+        run: cd repo/'Marketing Companion' && flutter config --enable-windows-desktop
 
       - name: Install dependencies
-        run: cd 'Marketing Companion' && flutter pub get
+        run: cd repo/'Marketing Companion' && flutter pub get
 
       - name: Analyze
-        run: cd 'Marketing Companion' && flutter analyze
+        run: cd repo/'Marketing Companion' && flutter analyze
 
       - name: Run tests
-        run: cd 'Marketing Companion' && flutter test --coverage
+        run: cd repo/'Marketing Companion' && flutter test --coverage
 
       - name: Build Windows release
-        run: cd 'Marketing Companion' && flutter build windows --release
+        run: cd repo/'Marketing Companion' && flutter build windows --release
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
