@@ -222,12 +222,30 @@ const RegistrationPage = () => {
     return sanitized;
   };
 
-  // Fetch with timeout
+  // Fetch with timeout and proper CORS handling
   const postWithTimeout = async (url, options = {}, ms = 15000) => {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), ms);
+    
+    const defaultOptions = {
+      mode: 'cors',
+      credentials: 'omit',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        ...options.headers
+      },
+      ...options,
+      signal: controller.signal
+    };
+    
     try {
-      return await fetch(url, { ...options, signal: controller.signal });
+      return await fetch(url, defaultOptions);
+    } catch (error) {
+      if (error.name === 'AbortError') {
+        throw new Error('Request timeout - please check your internet connection and try again');
+      }
+      throw error;
     } finally {
       clearTimeout(timeoutId);
     }
@@ -244,18 +262,31 @@ const RegistrationPage = () => {
       }
 
       const payload = sanitizePayload(formData);
+      console.log('Submitting to:', `${API_BASE}/registrations`);
+      console.log('Payload:', payload);
+      
       const response = await postWithTimeout(`${API_BASE}/registrations`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
           'Idempotency-Key': crypto?.randomUUID?.() || String(Date.now())
         },
         body: JSON.stringify(payload),
       }, 15000);
 
+      console.log('Response status:', response.status);
+      console.log('Response headers:', Object.fromEntries(response.headers.entries()));
+      
       if (!response.ok) {
-        const errorBody = await response.json().catch(() => ({}));
-        throw new Error(errorBody?.error || `Request failed with status ${response.status}`);
+        let errorMessage = `Request failed with status ${response.status}`;
+        try {
+          const errorBody = await response.text();
+          console.log('Error response body:', errorBody);
+          const parsedError = JSON.parse(errorBody);
+          errorMessage = parsedError?.error || errorMessage;
+        } catch (e) {
+          console.log('Could not parse error response:', e);
+        }
+        throw new Error(errorMessage);
       }
 
       const data = await response.json();
@@ -267,7 +298,15 @@ const RegistrationPage = () => {
       navigate(`/registration/thank-you?name=${encodeURIComponent(formData.preferredName)}`);
     } catch (error) {
       console.error('Registration error:', error);
-      alert(error.message || 'Registration failed. Please try again.');
+      let errorMessage = 'Registration failed. Please try again.';
+      
+      if (error.name === 'TypeError' && error.message.includes('fetch')) {
+        errorMessage = 'Network error - please check your internet connection and try again.';
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
+      alert(errorMessage);
     } finally {
       setIsSubmitting(false);
     }

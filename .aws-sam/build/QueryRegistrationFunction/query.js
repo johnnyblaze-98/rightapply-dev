@@ -31,7 +31,7 @@ function itemToCsvRow(item, headers) {
 function generateCsv(items) {
   if (!items.length) return 'No data available';
   
-  // Define CSV headers (exclude sensitive fields)
+  // Define CSV headers (exclude password field)
   const headers = [
     'id', 'createdAt', 'preferredName', 'dateOfBirth', 'linkedinUrl',
     'resumeEmail', 'resumePhone', 'personalPhone', 'fullAddress',
@@ -86,7 +86,7 @@ exports.handler = async (event) => {
 
         const item = unmarshall(result.Item);
         // Remove sensitive fields from response
-        delete item.resumeEmailPasswordSecretId;
+        delete item.resumeEmailPassword;
 
         return {
           statusCode: 200,
@@ -145,7 +145,7 @@ exports.handler = async (event) => {
       let items = result.Items.map(item => {
         const unmarshalled = unmarshall(item);
         // Remove sensitive fields
-        delete unmarshalled.resumeEmailPasswordSecretId;
+        delete unmarshalled.resumeEmailPassword;
         return unmarshalled;
       });
 

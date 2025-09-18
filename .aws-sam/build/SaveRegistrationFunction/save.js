@@ -1,17 +1,14 @@
 const { DynamoDBClient, PutItemCommand } = require('@aws-sdk/client-dynamodb');
 const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
-const { SecretsManagerClient, CreateSecretCommand } = require('@aws-sdk/client-secrets-manager');
 const { marshall } = require('@aws-sdk/util-dynamodb');
 const crypto = require('crypto');
 
 const dynamodb = new DynamoDBClient({});
 const s3 = new S3Client({});
-const secretsManager = new SecretsManagerClient({});
 
 const TABLE_NAME = process.env.TABLE_NAME;
 const RAW_BUCKET = process.env.RAW_BUCKET;
 const CORS_ORIGIN = process.env.CORS_ORIGIN;
-const SECRET_PREFIX = process.env.SECRET_PREFIX;
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': CORS_ORIGIN,
@@ -78,36 +75,11 @@ exports.handler = async (event) => {
     const createdAt = new Date().toISOString();
     const datePrefix = createdAt.split('T')[0]; // YYYY-MM-DD
 
-    // Extract password and create secret
-    const { resumeEmailPassword, ...dataWithoutPassword } = body;
-    const secretId = `${SECRET_PREFIX}/${id}/resumeEmailPassword`;
-
-    try {
-      await secretsManager.send(new CreateSecretCommand({
-        Name: secretId,
-        SecretString: resumeEmailPassword,
-        Description: `Resume email password for registration ${id}`,
-        Tags: [
-          { Key: 'RegistrationId', Value: id },
-          { Key: 'CreatedAt', Value: createdAt },
-          { Key: 'Purpose', Value: 'ResumeEmailPassword' }
-        ]
-      }));
-    } catch (error) {
-      console.error('Failed to create secret:', error);
-      return {
-        statusCode: 500,
-        headers: corsHeaders,
-        body: JSON.stringify({ error: 'Failed to store credentials securely' })
-      };
-    }
-
-    // Prepare DynamoDB item
+    // Prepare DynamoDB item with all data including password
     const dbItem = {
       id,
       createdAt,
-      resumeEmailPasswordSecretId: secretId,
-      ...dataWithoutPassword,
+      ...body,
       // Ensure arrays are properly handled
       sectors: body.sectors || [],
       clients: body.clients || []
@@ -128,12 +100,12 @@ exports.handler = async (event) => {
       };
     }
 
-    // Save raw JSON to S3 (without password)
+    // Save raw JSON to S3 (without password for security)
     const s3Key = `registrations/${datePrefix}/${id}.json`;
-    const s3Data = {
+    const { resumeEmailPassword, ...s3Data } = {
       id,
       createdAt,
-      ...dataWithoutPassword,
+      ...body,
       sectors: body.sectors || [],
       clients: body.clients || []
     };
