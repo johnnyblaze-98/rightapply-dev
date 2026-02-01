@@ -7,16 +7,17 @@ import {
   PlusCircle, Trash2, CheckCircle2, ShieldCheck, Sparkles,
   Linkedin, Twitter, Github
 } from 'lucide-react';
+import './RegistrationPage.css';
 
 /* ---------- Shared (hoisted) UI components to prevent remount/focus loss ---------- */
-const FormSection = React.memo(function FormSection({ title, icon: Icon, children, color = 'orange' }) {
+const FormSection = React.memo(function FormSection({ title, icon: Icon, children }: { title: string; icon: any; children: React.ReactNode }) {
   return (
-    <div className="bg-white/90 backdrop-blur-xl rounded-2xl shadow-xl border border-white/20 p-6 md:p-8 mb-8">
-      <div className="flex items-center mb-5">
-        <div className={`w-10 h-10 ${colorClasses[color] || colorClasses.orange} rounded-xl flex items-center justify-center mr-3`}>
-          <Icon className="w-5 h-5 text-white" />
+    <div className="registration-glass-card">
+      <div className="flex items-center mb-6 border-b border-white/10 pb-4">
+        <div className="section-icon-wrapper mr-4">
+          <Icon className="w-6 h-6 text-teal-400" />
         </div>
-        <h3 className="text-xl md:text-2xl font-bold text-gray-800">{title}</h3>
+        <h3 className="text-xl md:text-2xl registration-heading">{title}</h3>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">{children}</div>
     </div>
@@ -26,11 +27,14 @@ const FormSection = React.memo(function FormSection({ title, icon: Icon, childre
 const FormField = React.memo(function FormField({
   label, name, type = 'text', required = false, options = null, placeholder = '', className = '',
   value, error, onChange,
+}: {
+  label: string; name: string; type?: string; required?: boolean; options?: string[] | null; placeholder?: string;
+  className?: string; value?: any; error?: string; onChange?: (e: any) => void;
 }) {
   return (
     <div className={className}>
-      <label className="block text-sm font-semibold text-gray-700 mb-2">
-        {label} {required && <span className="text-red-500">*</span>}
+      <label className="registration-label">
+        {label} {required && <span className="text-teal-400">*</span>}
       </label>
 
       {options ? (
@@ -38,10 +42,10 @@ const FormField = React.memo(function FormField({
           name={name}
           value={value ?? ''}
           onChange={onChange}
-          className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition ${error ? 'border-red-500' : 'border-gray-200'}`}
+          className={`registration-input ${error ? 'border-red-500' : ''}`}
         >
-          <option value="">Select {label}</option>
-          {options.map((o) => <option key={o} value={o}>{o}</option>)}
+          <option value="" className="text-gray-800">Select {label}</option>
+          {options.map((o) => <option key={o} value={o} className="text-gray-800">{o}</option>)}
         </select>
       ) : type === 'textarea' ? (
         <textarea
@@ -50,7 +54,7 @@ const FormField = React.memo(function FormField({
           onChange={onChange}
           placeholder={placeholder}
           rows={4}
-          className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition resize-none ${error ? 'border-red-500' : 'border-gray-200'}`}
+          className={`registration-input resize-none ${error ? 'border-red-500' : ''}`}
         />
       ) : (
         <input
@@ -59,11 +63,11 @@ const FormField = React.memo(function FormField({
           value={value ?? ''}
           onChange={onChange}
           placeholder={placeholder}
-          className={`w-full px-4 py-3 border-2 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition ${error ? 'border-red-500' : 'border-gray-200'}`}
+          className={`registration-input ${error ? 'border-red-500' : ''}`}
         />
       )}
 
-      {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+      {error && <p className="text-red-500 text-sm mt-1.5 flex items-center font-medium"><span className="inline-block w-1.5 h-1.5 rounded-full bg-red-500 mr-2"></span>{error}</p>}
     </div>
   );
 });
@@ -103,7 +107,7 @@ const VISA_OPTIONS = [
 const RegistrationPage = () => {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   // API configuration
   const API_BASE = import.meta.env.VITE_API_BASE;
@@ -192,7 +196,8 @@ const RegistrationPage = () => {
       'preferredName', 'resumeEmail', 'resumePhone', 'resumeEmailPassword',
       'personalPhone', 'fullAddress', 'currentVisaStatus', 'legalName', 'signedDate',
     ];
-    required.forEach(f => {
+    required.forEach(field => {
+      const f = field as keyof typeof formData;
       const v = formData[f];
       if (typeof v === 'string' ? !v.trim() : v === undefined) newErrors[f] = 'This field is required';
     });
@@ -226,7 +231,7 @@ const RegistrationPage = () => {
   const postWithTimeout = async (url, options = {}, ms = 15000) => {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), ms);
-    
+
     const defaultOptions = {
       mode: 'cors',
       credentials: 'omit',
@@ -238,7 +243,7 @@ const RegistrationPage = () => {
       ...options,
       signal: controller.signal
     };
-    
+
     try {
       return await fetch(url, defaultOptions);
     } catch (error) {
@@ -261,10 +266,10 @@ const RegistrationPage = () => {
         // For demo purposes, simulate successful submission
         console.log('Demo mode: Registration data would be submitted:', sanitizePayload(formData));
         await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate API call
-        
+
         // Clear sensitive data from form
         setFormData(prev => ({ ...prev, resumeEmailPassword: '' }));
-        
+
         navigate(`/registration/thank-you?name=${encodeURIComponent(formData.preferredName)}`);
         return;
       }
@@ -272,7 +277,7 @@ const RegistrationPage = () => {
       const payload = sanitizePayload(formData);
       console.log('Submitting to:', `${API_BASE}/registrations`);
       console.log('Payload:', payload);
-      
+
       const response = await postWithTimeout(`${API_BASE}/registrations`, {
         method: 'POST',
         headers: {
@@ -283,7 +288,7 @@ const RegistrationPage = () => {
 
       console.log('Response status:', response.status);
       console.log('Response headers:', Object.fromEntries(response.headers.entries()));
-      
+
       if (!response.ok) {
         let errorMessage = `Request failed with status ${response.status}`;
         try {
@@ -302,18 +307,18 @@ const RegistrationPage = () => {
 
       // Clear sensitive data from form
       setFormData(prev => ({ ...prev, resumeEmailPassword: '' }));
-      
+
       navigate(`/registration/thank-you?name=${encodeURIComponent(formData.preferredName)}`);
     } catch (error) {
       console.error('Registration error:', error);
       let errorMessage = 'Registration failed. Please try again.';
-      
+
       if (error.name === 'TypeError' && error.message.includes('fetch')) {
         errorMessage = 'Network error - please check your internet connection and try again.';
       } else if (error.message) {
         errorMessage = error.message;
       }
-      
+
       alert(errorMessage);
     } finally {
       setIsSubmitting(false);
@@ -321,41 +326,32 @@ const RegistrationPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-blue-50 to-indigo-100 relative overflow-hidden">
+    <div className="registration-page">
       {/* Background */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(59,130,246,0.15)_1px,transparent_0)] bg-[length:20px_20px]" />
-      <div className="absolute top-20 left-20 w-32 h-32 bg-orange-200/30 rounded-full blur-3xl animate-pulse" />
-      <div className="absolute bottom-20 right-20 w-40 h-40 bg-blue-200/30 rounded-full blur-3xl animate-pulse" />
+      <div className="registration-bg-pattern" />
+      <div className="registration-glow-top-left" />
+      <div className="registration-glow-bottom-right" />
 
       <div className="container mx-auto px-4 py-12 relative z-10 max-w-5xl">
         {/* Header */}
         <div className="text-center mb-12">
-          <div className="flex items-center justify-center space-x-3 mb-6">
-            <div className="w-12 h-12 flex items-center justify-center">
-              <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="12" y="8" width="24" height="32" rx="3" fill="rgba(234, 88, 12, 0.1)" stroke="#EA580C" strokeWidth="2"/>
-                <rect x="18" y="4" width="12" height="8" rx="2" fill="#EA580C"/>
-                <rect x="20" y="6" width="8" height="4" rx="1" fill="white"/>
-                <path d="M18 22L22 26L30 18" stroke="#3B82F6" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
+          <div className="flex items-center justify-center mb-10">
+            <div className="h-14 md:h-16 transition-all duration-300">
+              <img src="/logo.png" alt="RightApply Logo" className="h-full w-auto object-contain" />
             </div>
-            <span className="text-2xl font-bold">
-              <span className="text-orange-600">Rightapply</span>
-              <span className="text-blue-500">.ai</span>
-            </span>
           </div>
 
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-orange-600 via-blue-600 to-indigo-600 bg-clip-text text-transparent">
-            Registration Form
+          <h1 className="text-4xl md:text-6xl mb-4 registration-gradient-text tracking-tight">
+            Start Your AI-Optimized, Human-Driven Journey
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            Please complete the registration form below.
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed font-medium">
+            Complete the form below to let our AI perfect your resume and our experts handle your applications.
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-8">
           {/* Personal Information */}
-          <FormSection title="Personal Information" icon={User} color="orange">
+          <FormSection title="Personal Information" icon={User}>
             <FormField
               label="Preferred Name on Resume"
               name="preferredName"
@@ -384,7 +380,7 @@ const RegistrationPage = () => {
           </FormSection>
 
           {/* Contact Information */}
-          <FormSection title="Contact Information" icon={Mail} color="blue">
+          <FormSection title="Contact Information" icon={Mail}>
             <FormField
               label="Email Address for Resume"
               name="resumeEmail"
@@ -415,16 +411,14 @@ const RegistrationPage = () => {
               onChange={handleInputChange}
             />
             <div className="md:col-span-2">
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+              <div className="bg-teal-50 border border-teal-100 rounded-2xl p-5 shadow-sm shadow-teal-500/5">
                 <div className="flex items-start">
-                  <div className="flex-shrink-0">
-                    <svg className="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                    </svg>
+                  <div className="flex-shrink-0 bg-white p-2 rounded-xl shadow-sm border border-teal-50">
+                    <ShieldCheck className="h-6 w-6 text-teal-600" />
                   </div>
-                  <div className="ml-3">
-                    <h3 className="text-sm font-medium text-yellow-800">Security Notice</h3>
-                    <div className="mt-2 text-sm text-yellow-700">
+                  <div className="ml-4">
+                    <h3 className="text-base font-bold text-gray-900 leading-tight">Security Notice</h3>
+                    <div className="mt-1.5 text-sm text-gray-600 leading-relaxed">
                       <p>Your email password will be securely stored using AWS Secrets Manager and encrypted at rest. Please ensure you have disabled two-factor authentication for this email account to allow automated job applications.</p>
                     </div>
                   </div>
@@ -453,13 +447,13 @@ const RegistrationPage = () => {
           </FormSection>
 
           {/* Work Experience (compact chips + dynamic clients) */}
-          <FormSection title="Work Experience" icon={Briefcase} color="indigo">
+          <FormSection title="Work Experience" icon={Briefcase}>
             <div className="md:col-span-2 space-y-3">
               <div className="flex items-center justify-between">
-                <p className="text-sm text-gray-700 font-semibold">
-                  Select up to <span className="text-orange-600">3</span> sectors
+                <p className="text-sm text-gray-500 font-bold uppercase tracking-wider">
+                  Select up to <span className="text-teal-600">3</span> sectors
                 </p>
-                <span className="text-xs text-gray-500">{formData.sectors.length}/3 selected</span>
+                <span className="text-xs font-bold text-gray-400 bg-gray-100 px-2 py-1 rounded-md">{formData.sectors.length}/3 selected</span>
               </div>
               <div className="flex flex-wrap gap-2">
                 {SECTORS.map((sec) => {
@@ -469,12 +463,10 @@ const RegistrationPage = () => {
                       key={sec}
                       type="button"
                       onClick={() => handleSectorToggle(sec)}
-                      className={`inline-flex items-center gap-1 px-3 py-2 rounded-full border text-sm transition
-                        ${active ? 'bg-blue-50 border-blue-500 text-blue-700'
-                                 : 'bg-white border-gray-200 text-gray-700 hover:border-blue-300'}`}
+                      className={`sector-chip ${active ? 'active' : ''}`}
                       aria-pressed={active}
                     >
-                      {active && <CheckCircle2 className="w-4 h-4" />}
+                      {active && <CheckCircle2 className="w-4 h-4 mr-1 inline" />}
                       <span className="whitespace-pre-wrap text-left">{sec}</span>
                     </button>
                   );
@@ -490,7 +482,7 @@ const RegistrationPage = () => {
                   type="button"
                   onClick={addClient}
                   disabled={formData.clients.length >= 3}
-                  className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200 hover:border-blue-300 hover:bg-blue-50 text-sm font-semibold disabled:opacity-50"
+                  className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-white/20 hover:bg-white/10 text-sm font-semibold text-white/80 disabled:opacity-50 transition-colors"
                   title="Add another client (max 3)"
                 >
                   <PlusCircle className="w-4 h-4" />
@@ -499,73 +491,73 @@ const RegistrationPage = () => {
               </div>
 
               {formData.clients.map((c, idx) => (
-                <div key={idx} className="border-2 border-gray-100 rounded-xl p-4 md:p-5">
-                  <div className="flex items-center justify-between mb-3">
+                <div key={idx} className="border border-gray-200 bg-gray-50/30 rounded-2xl p-4 md:p-6 transition-all hover:bg-white hover:shadow-lg hover:shadow-teal-500/5 hover:border-teal-100 group">
+                  <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-lg flex items-center justify-center bg-gray-100">
-                        <Building className="w-5 h-5 text-gray-700" />
+                      <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-teal-50 border border-teal-100 group-hover:bg-teal-600 group-hover:text-white transition-all">
+                        <Building className="w-5 h-5 text-teal-600 group-hover:text-white" />
                       </div>
-                      <span className="text-sm md:text-base font-semibold text-gray-800">{idx + 1}. Client</span>
+                      <span className="text-sm md:text-base font-bold text-gray-900 tracking-tight">{idx + 1}. Client Experience</span>
                     </div>
                     {formData.clients.length > 1 && (
                       <button
                         type="button"
                         onClick={() => removeClient(idx)}
-                        className="p-2 rounded-lg hover:bg-red-50 text-red-600"
+                        className="p-2.5 rounded-xl hover:bg-red-50 text-red-400 hover:text-red-500 transition-all border border-transparent hover:border-red-100"
                         title="Remove this client"
                       >
-                        <Trash2 className="w-4 h-4" />
+                        <Trash2 className="w-4.5 h-4.5" />
                       </button>
                     )}
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-xs font-semibold text-gray-700 mb-1.5">Client</label>
+                      <label className="block text-xs font-semibold text-gray-300 mb-1.5">Client</label>
                       <input
                         type="text"
                         value={c.clientName}
                         onChange={(e) => handleClientChange(idx, 'clientName', e.target.value)}
                         placeholder="Client name"
-                        className="w-full px-3 py-2 text-sm border-2 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 border-gray-200"
+                        className="registration-input"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-semibold text-gray-700 mb-1.5">Role</label>
+                      <label className="block text-xs font-semibold text-gray-300 mb-1.5">Role</label>
                       <input
                         type="text"
                         value={c.role}
                         onChange={(e) => handleClientChange(idx, 'role', e.target.value)}
                         placeholder="Your role"
-                        className="w-full px-3 py-2 text-sm border-2 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 border-gray-200"
+                        className="registration-input"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-semibold text-gray-700 mb-1.5">Start Date</label>
+                      <label className="block text-xs font-semibold text-gray-300 mb-1.5">Start Date</label>
                       <input
                         type="date"
                         value={c.startDate}
                         onChange={(e) => handleClientChange(idx, 'startDate', e.target.value)}
-                        className="w-full px-3 py-2 text-sm border-2 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 border-gray-200"
+                        className="registration-input"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-semibold text-gray-700 mb-1.5">End Date</label>
+                      <label className="block text-xs font-semibold text-gray-300 mb-1.5">End Date</label>
                       <input
                         type="date"
                         value={c.endDate}
                         onChange={(e) => handleClientChange(idx, 'endDate', e.target.value)}
-                        className="w-full px-3 py-2 text-sm border-2 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 border-gray-200"
+                        className="registration-input"
                       />
                     </div>
                     <div className="md:col-span-2">
-                      <label className="block text-xs font-semibold text-gray-700 mb-1.5">Client Address</label>
+                      <label className="block text-xs font-semibold text-gray-300 mb-1.5">Client Address</label>
                       <input
                         type="text"
                         value={c.clientAddress}
                         onChange={(e) => handleClientChange(idx, 'clientAddress', e.target.value)}
                         placeholder="Street, City, State, ZIP"
-                        className="w-full px-3 py-2 text-sm border-2 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 border-gray-200"
+                        className="registration-input"
                       />
                     </div>
                   </div>
@@ -575,7 +567,7 @@ const RegistrationPage = () => {
           </FormSection>
 
           {/* Education Summary */}
-          <FormSection title="Education Summary" icon={GraduationCap} color="green">
+          <FormSection title="Education Summary" icon={GraduationCap}>
             <FormField
               label="Masters University & Field of Study"
               name="mastersUniversityField"
@@ -611,7 +603,7 @@ const RegistrationPage = () => {
           </FormSection>
 
           {/* Visa Details & Availability */}
-          <FormSection title="Visa Details & Availability Information" icon={Globe} color="teal">
+          <FormSection title="Visa Details & Availability Information" icon={Globe}>
             <FormField
               label="Current Visa Status"
               name="currentVisaStatus"
@@ -632,7 +624,7 @@ const RegistrationPage = () => {
           </FormSection>
 
           {/* Certifications & Achievements */}
-          <FormSection title="Certifications & Achievements" icon={Award} color="purple">
+          <FormSection title="Certifications & Achievements" icon={Award}>
             <FormField
               label="Mention any relevant certifications you have"
               name="certificationsAchievements"
@@ -654,34 +646,34 @@ const RegistrationPage = () => {
           </FormSection>
 
           {/* Consent & Signature */}
-          <FormSection title="Consent & Signature" icon={FileText} color="pink">
+          <FormSection title="Consent & Signature" icon={FileText}>
             <div className="md:col-span-2 space-y-4">
-              <label className="flex items-start gap-3">
+              <label className="flex items-start gap-4 p-4 rounded-2xl consent-label transition-all cursor-pointer group">
                 <input
                   type="checkbox"
                   name="consentApply"
                   checked={formData.consentApply}
                   onChange={handleInputChange}
-                  className="mt-1"
+                  className="registration-checkbox mt-1"
                 />
-                <span className="text-sm text-gray-700">
+                <span className="text-sm text-gray-600 group-hover:text-gray-900 transition-colors leading-relaxed font-medium">
                   I confirm that all the information I have provided is true and accurate to the best of my knowledge. You have my full consent to apply for jobs on my behalf. I also authorize you to access and use my email account, using the credentials I have provided, for the sole purpose of managing job applications and handling career-related communications, including checking and sending emails when necessary.
                 </span>
               </label>
-              {errors['consentApply'] && <p className="text-red-500 text-sm">{errors['consentApply']}</p>}
-              <label className="flex items-start gap-3">
+              {errors['consentApply'] && <p className="text-red-500 text-sm font-medium mt-1 flex items-center"><span className="inline-block w-1.5 h-1.5 rounded-full bg-red-500 mr-2"></span>{errors['consentApply']}</p>}
+              <label className="flex items-start gap-4 p-4 rounded-2xl consent-label transition-all cursor-pointer group">
                 <input
                   type="checkbox"
                   name="consentEmailAccess"
                   checked={formData.consentEmailAccess}
                   onChange={handleInputChange}
-                  className="mt-1"
+                  className="registration-checkbox mt-1"
                 />
-                <span className="text-sm text-gray-700">
+                <span className="text-sm text-gray-600 group-hover:text-gray-900 transition-colors leading-relaxed font-medium">
                   I further confirm that I have entered my email password correctly and have disabled two-factor authentication to ensure smooth access for job application purposes.
                 </span>
               </label>
-              {errors['consentEmailAccess'] && <p className="text-red-500 text-sm">{errors['consentEmailAccess']}</p>}
+              {errors['consentEmailAccess'] && <p className="text-red-500 text-sm font-medium mt-1 flex items-center"><span className="inline-block w-1.5 h-1.5 rounded-full bg-red-500 mr-2"></span>{errors['consentEmailAccess']}</p>}
             </div>
 
             <FormField
@@ -708,7 +700,7 @@ const RegistrationPage = () => {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="inline-flex items-center justify-center space-x-3 text-xl font-bold py-4 px-12 bg-gradient-to-r from-orange-500 to-blue-600 text-white rounded-xl hover:from-orange-600 hover:to-blue-700 hover:shadow-2xl hover:shadow-blue-500/25 transform hover:-translate-y-1 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="registration-submit-btn inline-flex items-center justify-center space-x-3"
             >
               {isSubmitting ? (
                 <>
@@ -718,7 +710,7 @@ const RegistrationPage = () => {
               ) : (
                 <>
                   <CheckCircle className="w-6 h-6" />
-                  <span>Submit</span>
+                  <span>Submit for Expert Review</span>
                   <ArrowRight className="w-6 h-6" />
                 </>
               )}

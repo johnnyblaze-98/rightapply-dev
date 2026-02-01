@@ -1,63 +1,46 @@
 import React from 'react';
+import './ScrollingTrain.css';
 
-const companies = [
-  { name: "Rocket Mortgage", logo: "https://logo.clearbit.com/rocketmortgage.com" },
-  { name: "PayPal", logo: "https://logo.clearbit.com/paypal.com" },
-  { name: "Rivian", logo: "https://logo.clearbit.com/rivian.com" },
-  { name: "Walmart", logo: "https://logo.clearbit.com/walmart.com" },
-  { name: "Amazon", logo: "https://logo.clearbit.com/amazon.com" },
-  { name: "BigCommerce", logo: "https://logo.clearbit.com/bigcommerce.com" },
-  { name: "Amex", logo: "https://logo.clearbit.com/americanexpress.com" },
-  { name: "Discover", logo: "https://logo.clearbit.com/discover.com" },
-  { name: "Stratacache", logo: "https://logo.clearbit.com/stratacache.com" },
-  { name: "Verizon", logo: "https://logo.clearbit.com/verizon.com" },
-  { name: "Sony", logo: "https://logo.clearbit.com/sony.com" },
-  { name: "Geotab", logo: "https://logo.clearbit.com/geotab.com" },
-  { name: "CVS Pharmacy", logo: "https://logo.clearbit.com/cvs.com" },
-  { name: "Couchbase", logo: "https://logo.clearbit.com/couchbase.com" },
-  { name: "ThoughtSpot", logo: "https://logo.clearbit.com/thoughtspot.com" },
-  { name: "Confluent", logo: "https://logo.clearbit.com/confluent.io" },
-  { name: "Databricks", logo: "https://logo.clearbit.com/databricks.com" },
-  { name: "Nylas", logo: "https://logo.clearbit.com/nylas.com" },
-  { name: "C3.ai", logo: "https://logo.clearbit.com/c3.ai" },
-  { name: "PubMatic", logo: "https://logo.clearbit.com/pubmatic.com" },
-  { name: "Zuora", logo: "https://logo.clearbit.com/zuora.com" },
-  { name: "Amplitude", logo: "https://logo.clearbit.com/amplitude.com" },
-  { name: "Mixpanel", logo: "https://logo.clearbit.com/mixpanel.com" },
-  { name: "Segment", logo: "https://logo.clearbit.com/segment.com" },
-  { name: "Sentry", logo: "https://logo.clearbit.com/sentry.io" },
-  { name: "Airbyte", logo: "https://logo.clearbit.com/airbyte.io" },
-  { name: "Monte Carlo", logo: "https://logo.clearbit.com/montecarlodata.com" },
-  { name: "Astronomer", logo: "https://logo.clearbit.com/astronomer.io" },
-  { name: "RudderStack", logo: "https://logo.clearbit.com/rudderstack.com" },
-  { name: "Heap", logo: "https://logo.clearbit.com/heap.io" },
-  { name: "Fivetran", logo: "https://logo.clearbit.com/fivetran.com" },
-  { name: "Hightouch", logo: "https://logo.clearbit.com/hightouch.com" },
-  { name: "MParticle", logo: "https://logo.clearbit.com/mparticle.com" },
-  { name: "Crux", logo: "https://logo.clearbit.com/cruxdata.com" },
-  { name: "Tecton", logo: "https://logo.clearbit.com/tecton.ai" },
-  { name: "Rockset", logo: "https://logo.clearbit.com/rockset.com" },
-  { name: "Starburst", logo: "https://logo.clearbit.com/starburst.io" },
-  { name: "Timescale", logo: "https://logo.clearbit.com/timescale.com" },
-  { name: "Materialize", logo: "https://logo.clearbit.com/materialize.com" },
-  { name: "DataStax", logo: "https://logo.clearbit.com/datastax.com" },
-  { name: "Imply", logo: "https://logo.clearbit.com/imply.io" },
-  { name: "Vertica", logo: "https://logo.clearbit.com/vertica.com" },
-  { name: "ClickHouse", logo: "https://logo.clearbit.com/clickhouse.com" }
+interface Company {
+  name: string;
+  logo: string;
+}
+
+const companies: Company[] = [
+  { name: "Rocket Mortgage", logo: "https://1000logos.net/wp-content/uploads/2025/08/Rocket-Mortgage-Logo.png" },
+  { name: "PayPal", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/PayPal.svg/1280px-PayPal.svg.png" },
+  { name: "Rivian", logo: "https://cdn.worldvectorlogo.com/logos/rivian-wordmark-1.svg" },
+  { name: "Walmart", logo: "https://www.clipartmax.com/png/middle/118-1183097_walmart-logo-png-image-purepng-free-transparent-cc0-walmart-logo.png" },
+  { name: "Amazon", logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR1j7Wu8mxJBRvqD-CECJf_Sxk_2qRbBTktGQ&s" },
+  { name: "BigCommerce", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Bc-logo-dark.svg/1280px-Bc-logo-dark.svg.png" },
+  { name: "Amex", logo: "https://www.logo.wine/a/logo/American_Express/American_Express-Logo.wine.svg" },
+  { name: "Discover", logo: "https://1000logos.net/wp-content/uploads/2021/05/Discover-logo.png" },
+  { name: "Stratacache", logo: "https://europe2025.advertisingweek.com/images/userfiles/images/partners/uploads/999-stratacache.png" },
+  { name: "Verizon", logo: "https://1000logos.net/wp-content/uploads/2017/06/Verizon-Logo.jpg" },
+  { name: "Sony", logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQdp8Zmo9HSSLpUoze9tSb2yOvJ5gaC6Bb7xQ&s" },
+  { name: "Geotab", logo: "https://www.theclimatepledge.com/content/dam/amazonclimatepledge/signatory-logos/Geotab.png" },
+  { name: "CVS Pharmacy", logo: "https://www.logo.wine/a/logo/CVS_Pharmacy/CVS_Pharmacy-Logo.wine.svg" },
 ];
 
-const CompanyLogoCard = ({ company, index }) => {
+interface CompanyLogoCardProps {
+  company: Company;
+  index: number;
+}
+
+const CompanyLogoCard: React.FC<CompanyLogoCardProps> = ({ company, index }) => {
   return (
-    <div 
+    <div
       key={`${company.name}-${index}`}
       className="flex-shrink-0 w-32 h-28 mx-3 bg-white shadow rounded-lg p-3 flex flex-col items-center justify-center group hover:scale-105 transition-all duration-300"
     >
       <div className="flex-1 flex items-center justify-center mb-1">
-        <img 
-          src={company.logo} 
-          alt={`${company.name} logo`} 
+        <img
+          src={company.logo}
+          alt={`${company.name} logo`}
           className="max-w-[60px] max-h-[35px] object-contain group-hover:scale-110 transition-transform duration-300"
-          onError={(e) => { e.currentTarget.style.display = 'none'; }}
+          onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+            e.currentTarget.style.display = 'none';
+          }}
         />
       </div>
       <p className="text-gray-600 text-xs font-medium text-center truncate w-full">
@@ -67,37 +50,19 @@ const CompanyLogoCard = ({ company, index }) => {
   );
 };
 
-const ScrollingTrain = () => {
+const ScrollingTrain: React.FC = () => {
   return (
-    <>
-      <div className="relative overflow-hidden py-4">
+    <div className="relative overflow-hidden py-4">
+      {/* Left and right gradient overlays (no blur) */}
+      <div className="absolute left-0 top-0 w-24 h-full bg-gradient-to-r from-white via-white/70 to-transparent z-10 pointer-events-none" />
+      <div className="absolute right-0 top-0 w-24 h-full bg-gradient-to-l from-white via-white/70 to-transparent z-10 pointer-events-none" />
 
-        {/* Left and right gradient overlays (no blur) */}
-        <div className="absolute left-0 top-0 w-24 h-full bg-gradient-to-r from-white via-white/70 to-transparent z-10 pointer-events-none" />
-        <div className="absolute right-0 top-0 w-24 h-full bg-gradient-to-l from-white via-white/70 to-transparent z-10 pointer-events-none" />
-
-        <div className="flex animate-scroll whitespace-nowrap space-x-4 px-6">
-          {[...companies, ...companies].map((company, index) => (
-            <CompanyLogoCard key={index} company={company} index={index} />
-          ))}
-        </div>
+      <div className="flex animate-scroll whitespace-nowrap space-x-4 px-6">
+        {[...companies, ...companies].map((company, index) => (
+          <CompanyLogoCard key={index} company={company} index={index} />
+        ))}
       </div>
-
-      <style jsx>{`
-        @keyframes scroll {
-          0% { transform: translate3d(0, 0, 0); }
-          100% { transform: translate3d(-50%, 0, 0); }
-        }
-
-        .animate-scroll {
-          animation: scroll 20s linear infinite;
-        }
-
-        .animate-scroll:hover {
-          animation-play-state: paused;
-        }
-      `}</style>
-    </>
+    </div>
   );
 };
 

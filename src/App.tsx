@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 // Import all existing components as before
@@ -8,8 +8,10 @@ import Features from './components/Features';
 import Benefits from './components/Benefits';
 import Success from './components/Success';
 import Companies from './components/Companies';
+import GoogleReviews from './components/GoogleReviews';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
+import FAQ from './components/FAQ';
 
 // Registration components
 import RegistrationPage from './components/RegistrationPage';
@@ -42,9 +44,10 @@ function LandingPage() {
       const scrolled = window.pageYOffset;
       const parallaxElements = document.querySelectorAll('.parallax-element');
       parallaxElements.forEach(element => {
-        const speed = element.getAttribute('data-speed') || "0.5";
+        const htmlElement = element as HTMLElement;
+        const speed = htmlElement.getAttribute('data-speed') || "0.5";
         const yPos = -(scrolled * parseFloat(speed));
-        element.style.transform = `translateY(${yPos}px)`;
+        htmlElement.style.transform = `translateY(${yPos}px)`;
       });
     };
 
@@ -67,7 +70,9 @@ function LandingPage() {
         <Benefits />
         {/* <Success /> */}
         <Companies />
+        <GoogleReviews />
         <Contact />
+        <FAQ />
       </main>
       <Footer />
     </div>

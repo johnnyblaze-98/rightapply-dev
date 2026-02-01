@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { ClipboardCheck, Twitter, Linkedin, Github, ArrowUp } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Twitter, Linkedin, Github, ArrowUp, ShieldCheck, Heart } from 'lucide-react';
 
 const Footer = () => {
   const [showScrollTop, setShowScrollTop] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      setShowScrollTop(window.scrollY > 10);
+      setShowScrollTop(window.scrollY > 300);
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
@@ -16,106 +16,146 @@ const Footer = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const footerLinks = {
+    product: [
+      { name: 'Features', href: '#features' },
+      { name: 'Benefits', href: '#benefits' },
+      { name: 'Companies', href: '#companies' },
+      { name: 'FAQ', href: '#faq' }
+    ],
+    company: [
+      { name: 'About Us', href: '/about' },
+      { name: 'Careers', href: '/careers' },
+      { name: 'Success Stories', href: '/success' },
+      { name: 'Contact', href: '#contact' }
+    ],
+    legal: [
+      { name: 'Privacy Policy', href: '#' },
+      { name: 'Terms of Service', href: '#' },
+      { name: 'Cookie Policy', href: '#' },
+      { name: 'www.rightapply.ai', href: '#' }
+    ]
+  };
+
   return (
-    <footer className="section-bg-modern border-t border-orange-200/50 relative overflow-hidden pt-20">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 pattern-dots-modern opacity-20"></div>
+    <footer className="bg-gray-900 border-t border-white/5 relative overflow-hidden pt-24 pb-12">
+      {/* Background Decor */}
+      <div className="absolute inset-0 pattern-dots-modern opacity-[0.03]"></div>
+      <div className="absolute top-0 right-[-5%] w-[400px] h-[400px] bg-teal-500/5 rounded-full blur-[100px]"></div>
 
-      {/* Modern gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-t from-orange-25/30 via-transparent to-orange-50/20"></div>
+      <div className="container-modern px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-12 lg:gap-16 mb-20">
 
-      <div className="container-modern px-4 sm:px-6 lg:px-8 pt-16 pb-10 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-10 md:gap-16 mb-10">
-          {/* Company Info */}
-          <div className="md:col-span-2">
-            <div className="flex items-center space-x-3 mb-6">
-              <div className="w-12 h-12 flex items-center justify-center">
-                <svg
-                  width="48"
-                  height="48"
-                  viewBox="0 0 48 48"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <rect x="12" y="8" width="24" height="32" rx="3" fill="rgba(234, 88, 12, 0.1)" stroke="#EA580C" strokeWidth="2" />
-                  <rect x="18" y="4" width="12" height="8" rx="2" fill="#EA580C" />
-                  <rect x="20" y="6" width="8" height="4" rx="1" fill="white" />
-                  <path d="M18 22L22 26L30 18" stroke="#3B82F6" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </div>
-              <div>
-                <span className="text-2xl font-bold font-['Inter']" style={{ fontWeight: 800, letterSpacing: '-0.02em' }}>
-                  <span className="text-orange-600">Rightapply</span>
-                  <span className="text-blue-500">.ai</span>
-                </span>
-                <p className="text-xs text-blue-500/70 font-medium tracking-wider">
-                  Intelligent Job Search
-                </p>
+          {/* Brand Info */}
+          <div className="lg:col-span-2">
+            <div className="flex items-center group cursor-pointer mb-8" onClick={scrollToTop}>
+              <div className="h-12 md:h-16 w-48 md:w-64 flex items-center justify-start group-hover:scale-105 transition-all duration-300">
+                <img src="/logo.png" alt="RightApply Logo" className="h-full w-auto object-contain" onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                  const svg = `
+                    <div class="flex items-center space-x-4 text-white">
+                      <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" class="md:w-14 md:h-14">
+                        <rect x="12" y="8" width="24" height="32" rx="3" fill="rgba(20, 184, 166, 0.15)" stroke="#14b8a6" strokeWidth="2.5" />
+                        <rect x="18" y="4" width="12" height="8" rx="2" fill="#14b8a6" />
+                        <rect x="20" y="6" width="8" height="4" rx="1" fill="white" />
+                        <path d="M18 22L22 26L30 18" stroke="#6366f1" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                      <span class="text-2xl md:text-3xl font-black">Rightapply.ai</span>
+                    </div>
+                  `;
+                  e.currentTarget.parentElement!.insertAdjacentHTML('beforeend', svg);
+                }} />
               </div>
             </div>
-            <p className="text-gray-600 text-lg leading-relaxed mb-6 max-w-md">
-              Transforming careers through <span className="text-orange-600 font-semibold">intelligent job search</span> and{' '}
-              <span className="text-orange-500 font-semibold">AI-powered career guidance</span>.
+
+            <p className="text-gray-400 text-lg leading-relaxed mb-10 font-medium max-w-sm">
+              We empower professionals with <span className="text-white font-bold">AI-optimized resumes</span> and <span className="text-white font-bold">human-managed job applications</span>.
             </p>
 
             {/* Social Links */}
-            <div className="flex space-x-4">
-              <a href="#" className="glass-card p-3 rounded-xl hover-lift-modern">
-                <Twitter className="w-5 h-5 text-orange-600" />
-              </a>
-              <a href="#" className="glass-card p-3 rounded-xl hover-lift-modern">
-                <Linkedin className="w-5 h-5 text-orange-600" />
-              </a>
-              <a href="#" className="glass-card p-3 rounded-xl hover-lift-modern">
-                <Github className="w-5 h-5 text-orange-600" />
-              </a>
+            <div className="flex space-x-4 mb-4 lg:mb-0">
+              {[Twitter, Linkedin, Github].map((Icon, idx) => (
+                <a
+                  key={idx}
+                  href="#"
+                  className="w-10 h-10 md:w-12 md:h-12 bg-white/5 hover:bg-teal-500/20 rounded-xl md:rounded-2xl flex items-center justify-center border border-white/10 hover:border-teal-400/50 transition-all duration-300 group"
+                >
+                  <Icon className="w-5 h-5 text-gray-400 group-hover:text-teal-400 transition-colors" />
+                </a>
+              ))}
             </div>
           </div>
 
-          {/* Quick Links */}
-<div className="md:col-start-4">
-  <h4 className="text-xl font-bold text-gray-900 mb-6 text-shadow-modern">
-    Quick Links
-  </h4>
-  <ul className="space-y-3">
-    {[
-      { name: 'Features', href: '#features' },
-      { name: 'Success Stories', href: '#success' },
-      { name: 'Companies', href: '#companies' },
-    ].map((link) => (
-      <li key={link.name}>
-        <a
-          href={link.href}
-          className="text-gray-600 hover:text-orange-600 transition-colors duration-300 hover-lift-modern inline-block"
-        >
-          {link.name}
-        </a>
-      </li>
-    ))}
-  </ul>
-</div>
+          {/* Links Grid */}
+          <div className="md:col-span-1 lg:col-span-4 grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-12">
+            <div>
+              <h4 className="text-white font-black uppercase text-sm tracking-[0.2em] mb-8">Product</h4>
+              <ul className="space-y-4">
+                {footerLinks.product.map(link => (
+                  <li key={link.name}>
+                    <a href={link.href} className="text-gray-400 hover:text-teal-400 font-bold transition-all duration-300 flex items-center group">
+                      <span className="w-0 group-hover:w-2 h-[1px] bg-teal-400 mr-0 group-hover:mr-2 transition-all"></span>
+                      {link.name}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-          {/* Contact Info - Commented Out */}
-          {/* 
-          <div>
-            <h4 className="text-xl font-bold text-gray-900 mb-6 text-shadow-modern">Contact</h4>
-            <div className="space-y-4">
-              <div className="flex items-center">
-                <Mail className="w-5 h-5 text-orange-600 mr-3 flex-shrink-0" />
-                <span className="text-gray-600">hello@rightapply.ai</span>
-              </div>
-              <div className="flex items-center">
-                <Phone className="w-5 h-5 text-orange-600 mr-3 flex-shrink-0" />
-                <span className="text-gray-600">+1 (555) 123-4567</span>
+            <div>
+              <h4 className="text-white font-black uppercase text-xs md:text-sm tracking-[0.2em] mb-6 md:mb-8">Company</h4>
+              <ul className="space-y-4">
+                {footerLinks.company.map(link => (
+                  <li key={link.name}>
+                    <a href={link.href} className="text-gray-400 hover:text-teal-400 font-bold transition-all duration-300 flex items-center group text-sm md:text-base">
+                      <span className="w-0 group-hover:w-2 h-[1px] bg-teal-400 mr-0 group-hover:mr-2 transition-all"></span>
+                      {link.name}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="col-span-2 md:col-span-2 lg:col-span-1">
+              <h4 className="text-white font-black uppercase text-xs md:text-sm tracking-[0.2em] mb-6 md:mb-8">Newsletter</h4>
+              <p className="text-gray-500 text-sm mb-6 font-medium">Get the latest career tips and AI shifts delivered to you.</p>
+              <div className="relative">
+                <input
+                  type="email"
+                  placeholder="name@email.com"
+                  className="w-full bg-white/5 border border-white/10 rounded-2xl py-3 md:py-4 px-6 text-white placeholder:text-gray-600 focus:outline-none focus:border-teal-500/50 transition-colors"
+                />
+                <button className="absolute right-2 top-2 bottom-2 bg-teal-500 hover:bg-teal-600 text-white font-black px-3 md:px-4 rounded-xl transition-all shadow-lg shadow-teal-500/20 active:scale-95 text-xs md:text-sm">
+                  JOIN
+                </button>
               </div>
             </div>
           </div>
-          */}
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-orange-100 pt-6 flex justify-end">
-          {/* Footer bottom content can go here */}
+        <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-8">
+          <div className="flex items-center space-x-6">
+            <p className="text-gray-600 text-sm font-bold">&copy; 2026 RightApply Inc.</p>
+            <div className="flex space-x-4">
+              {footerLinks.legal.map(link => (
+                <a key={link.name} href={link.href} className="text-gray-600 hover:text-teal-400 text-xs font-black uppercase tracking-tighter transition-colors">
+                  {link.name}
+                </a>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex items-center space-x-6 text-gray-600 font-bold text-sm">
+            <div className="flex items-center">
+              <ShieldCheck className="w-4 h-4 mr-2 text-teal-800" />
+              <span>SSL Encrypted</span>
+            </div>
+            <div className="flex items-center">
+              <Heart className="w-4 h-4 mr-2 text-indigo-800" />
+              <span>Built for Careers</span>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -123,9 +163,9 @@ const Footer = () => {
       {showScrollTop && (
         <button
           onClick={scrollToTop}
-          className="fixed bottom-8 right-8 bg-gradient-to-r from-orange-500 to-orange-600 text-white p-4 rounded-full shadow-orange-modern hover-lift-modern z-50 animate-glow-pulse transition-all duration-300 transform hover:scale-110"
+          className="fixed bottom-6 right-6 md:bottom-12 md:right-12 bg-gradient-to-br from-teal-500 to-indigo-600 text-white p-4 md:p-5 rounded-2xl md:rounded-[1.5rem] shadow-2xl shadow-teal-500/40 hover-lift-modern z-50 animate-glow-pulse border border-white/20 active:scale-90"
         >
-          <ArrowUp className="w-6 h-6" />
+          <ArrowUp className="w-5 h-5 md:w-6 md:h-6 stroke-[3px]" />
         </button>
       )}
     </footer>
