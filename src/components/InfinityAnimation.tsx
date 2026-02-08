@@ -1,8 +1,12 @@
 import React from 'react';
 
-const InfinityAnimation = () => {
+interface InfinityAnimationProps {
+  className?: string;
+}
+
+const InfinityAnimation = ({ className = "" }: InfinityAnimationProps) => {
   return (
-    <div className="relative w-full h-36 flex items-center justify-center overflow-hidden">
+    <div className={`relative w-full h-36 flex items-center justify-center overflow-hidden ${className}`}>
       <div className="relative">
         <svg viewBox="0 0 200 100" className="infinity-svg">
           <defs>
@@ -61,7 +65,8 @@ const InfinityAnimation = () => {
         </div>
       </div>
 
-      <style jsx>{`
+      <style dangerouslySetInnerHTML={{
+        __html: `
         .infinity-svg {
           width: 220px;
           height: 100px;
@@ -128,7 +133,7 @@ const InfinityAnimation = () => {
             opacity: 0.8;
           }
         }
-      `}</style>
+      `}} />
     </div>
   );
 };

@@ -19,6 +19,8 @@ import ThankYouPage from './components/ThankYouPage';
 import ResumeAIForm from './components/ResumeAIForm';
 import ResumeAIResults from './components/ResumeAIResults';
 
+import CustomCursor from './components/CustomCursor';
+
 function LandingPage() {
   useEffect(() => {
     // Scroll animation observer
@@ -62,7 +64,7 @@ function LandingPage() {
 
   return (
     <div className="min-h-screen bg-white text-gray-900 overflow-x-hidden">
-      {/* <CustomCursor /> */}
+      <CustomCursor />
       <Header />
       <main>
         <Hero />

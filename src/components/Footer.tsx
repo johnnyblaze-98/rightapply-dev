@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Twitter, Linkedin, Github, ArrowUp, ShieldCheck, Heart } from 'lucide-react';
+import { Twitter, Linkedin, Facebook, Instagram, ArrowUp, ShieldCheck, Heart } from 'lucide-react';
 
 const Footer = () => {
   const [showScrollTop, setShowScrollTop] = useState(false);
@@ -33,9 +33,16 @@ const Footer = () => {
       { name: 'Privacy Policy', href: '#' },
       { name: 'Terms of Service', href: '#' },
       { name: 'Cookie Policy', href: '#' },
-      { name: 'www.rightapply.ai', href: '#' }
+      // { name: 'www.rightapply.ai', href: '#' }
     ]
   };
+
+  const socialLinks = [
+    { name: 'LinkedIn', icon: Linkedin, href: 'https://www.linkedin.com/company/rightapply-ai/' },
+    { name: 'Twitter', icon: Twitter, href: 'https://twitter.com/rightapply_ai' },
+    { name: 'Facebook', icon: Facebook, href: 'https://www.facebook.com/p/Rightapplay-Ai-61587536570024/' },
+    { name: 'Instagram', icon: Instagram, href: 'https://www.instagram.com/rightapply.ai/' }
+  ];
 
   return (
     <footer className="bg-gray-900 border-t border-white/5 relative overflow-hidden pt-24 pb-12">
@@ -74,10 +81,13 @@ const Footer = () => {
 
             {/* Social Links */}
             <div className="flex space-x-4 mb-4 lg:mb-0">
-              {[Twitter, Linkedin, Github].map((Icon, idx) => (
+              {socialLinks.map(({ icon: Icon, href, name }, idx) => (
                 <a
                   key={idx}
-                  href="#"
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={name}
                   className="w-10 h-10 md:w-12 md:h-12 bg-white/5 hover:bg-teal-500/20 rounded-xl md:rounded-2xl flex items-center justify-center border border-white/10 hover:border-teal-400/50 transition-all duration-300 group"
                 >
                   <Icon className="w-5 h-5 text-gray-400 group-hover:text-teal-400 transition-colors" />
@@ -87,7 +97,7 @@ const Footer = () => {
           </div>
 
           {/* Links Grid */}
-          <div className="md:col-span-1 lg:col-span-4 grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-12">
+          <div className="md:col-span-1 lg:col-span-4 grid grid-cols-2 gap-12">
             <div>
               <h4 className="text-white font-black uppercase text-sm tracking-[0.2em] mb-8">Product</h4>
               <ul className="space-y-4">
@@ -116,6 +126,8 @@ const Footer = () => {
               </ul>
             </div>
 
+            {/* Newsletter section hidden as requested */}
+            {/* 
             <div className="col-span-2 md:col-span-2 lg:col-span-1">
               <h4 className="text-white font-black uppercase text-xs md:text-sm tracking-[0.2em] mb-6 md:mb-8">Newsletter</h4>
               <p className="text-gray-500 text-sm mb-6 font-medium">Get the latest career tips and AI shifts delivered to you.</p>
@@ -129,14 +141,15 @@ const Footer = () => {
                   JOIN
                 </button>
               </div>
-            </div>
+            </div> 
+            */}
           </div>
         </div>
 
         {/* Bottom Bar */}
         <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="flex items-center space-x-6">
-            <p className="text-gray-600 text-sm font-bold">&copy; 2026 RightApply Inc.</p>
+            <p className="text-gray-600 text-sm font-bold">&copy; 2026 Right apply-Ai private limited</p>
             <div className="flex space-x-4">
               {footerLinks.legal.map(link => (
                 <a key={link.name} href={link.href} className="text-gray-600 hover:text-teal-400 text-xs font-black uppercase tracking-tighter transition-colors">
