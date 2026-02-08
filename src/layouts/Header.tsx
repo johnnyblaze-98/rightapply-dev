@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, TrendingUp, MessageSquare, Target, Brain, Award, HelpCircle } from 'lucide-react';
 
 const Header = () => {
@@ -13,12 +14,15 @@ const Header = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const location = useLocation();
+  const isHomePage = location.pathname === '/';
+
   const navItems = [
-    { name: 'Home', href: '#home', icon: Brain },
-    { name: 'Features', href: '#features', icon: Target },
-    { name: 'Benefits', href: '#benefits', icon: Award },
-    { name: 'FAQ', href: '#faq', icon: HelpCircle },
-    { name: 'Contact', href: '#contact', icon: MessageSquare },
+    { name: 'Home', href: isHomePage ? '#home' : '/#home', icon: Brain },
+    { name: 'Features', href: isHomePage ? '#features' : '/#features', icon: Target },
+    { name: 'Benefits', href: isHomePage ? '#benefits' : '/#benefits', icon: Award },
+    { name: 'FAQ', href: isHomePage ? '#faq' : '/#faq', icon: HelpCircle },
+    { name: 'Contact', href: isHomePage ? '#contact' : '/#contact', icon: MessageSquare },
   ];
 
 
@@ -31,7 +35,7 @@ const Header = () => {
         <div className="container-modern py-4">
           <div className="flex items-center justify-between">
             {/* Logo */}
-            <div className="flex items-center group cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+            <Link to="/" className="flex items-center group cursor-pointer">
               <div className="relative">
                 <div className="h-10 md:h-12 w-32 md:w-48 flex items-center justify-start group-hover:scale-105 transition-all duration-300">
                   <img src="/logo.png" alt="RightApply Logo" className="h-full w-auto object-contain" onError={(e) => {
@@ -51,7 +55,7 @@ const Header = () => {
                   }} />
                 </div>
               </div>
-            </div>
+            </Link>
 
             {/* Navigation */}
             <nav className="hidden md:flex items-center space-x-4 lg:space-x-8">
@@ -71,13 +75,13 @@ const Header = () => {
                 );
               })}
 
-              <button
+              <Link
+                to="/registration"
                 className="modern-button !py-2.5 !px-6 !text-sm flex items-center space-x-2"
-                onClick={() => window.location.href = '/registration'}
               >
                 <span>Get Started</span>
                 <TrendingUp className="w-4 h-4" />
-              </button>
+              </Link>
             </nav>
 
             {/* Mobile Menu Button */}
@@ -113,13 +117,14 @@ const Header = () => {
                   </a>
                 );
               })}
-              <button
+              <Link
+                to="/registration"
                 className="modern-button w-full flex items-center justify-center space-x-2 py-4"
-                onClick={() => { setIsMenuOpen(false); window.location.href = '/registration'; }}
+                onClick={() => setIsMenuOpen(false)}
               >
                 <span>Get Started</span>
                 <TrendingUp className="w-5 h-5" />
-              </button>
+              </Link>
             </nav>
           </div>
         </div>

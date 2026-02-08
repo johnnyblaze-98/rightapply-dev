@@ -1,5 +1,5 @@
 import { Target, Users, Star, Rocket, Globe, Brain } from 'lucide-react';
-import InfinityAnimation from './InfinityAnimation';
+import InfinityAnimation from '../animations/InfinityAnimation';
 
 const Hero = () => {
   return (

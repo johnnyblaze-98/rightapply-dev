@@ -1,5 +1,5 @@
 import { Building2, Award, Globe, Zap } from 'lucide-react';
-import ScrollingTrain from './ScrollingTrain';
+import ScrollingTrain from '../animations/ScrollingTrain';
 
 const Companies = () => {
   const stats = [
