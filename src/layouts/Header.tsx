@@ -21,8 +21,8 @@ const Header = () => {
     { name: 'Home', href: isHomePage ? '#home' : '/#home', icon: Brain },
     { name: 'Features', href: isHomePage ? '#features' : '/#features', icon: Target },
     { name: 'Benefits', href: isHomePage ? '#benefits' : '/#benefits', icon: Award },
-    { name: 'FAQ', href: isHomePage ? '#faq' : '/#faq', icon: HelpCircle },
     { name: 'Contact', href: isHomePage ? '#contact' : '/#contact', icon: MessageSquare },
+    { name: 'FAQ', href: isHomePage ? '#faq' : '/#faq', icon: HelpCircle },
   ];
 
 
