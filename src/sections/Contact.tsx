@@ -16,7 +16,7 @@ const Contact = () => {
     setIsSubmitting(true);
 
     // Prepare WhatsApp message template
-    const whatsappNumber = '918555002328';
+    const whatsappNumber = '919666534599';
     const message = `*New Career Consultation Request*
 --------------------------------
 *Name:* ${formState.name}

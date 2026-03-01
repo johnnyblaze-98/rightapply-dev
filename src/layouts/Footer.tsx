@@ -187,7 +187,7 @@ const Footer = () => {
 
         {/* WhatsApp Floating Button */}
         <a
-          href="https://wa.me/918555002328?text=Hi%2C%20I%20just%20explored%20RightApply.ai%20and%20I%27m%20interested%20in%20your%20career%20services.%20Could%20you%20please%20provide%20more%20details%3F"
+          href="https://wa.me/19453814899?text=Hi%2C%20I%20just%20explored%20RightApply.ai%20and%20I%27m%20interested%20in%20your%20career%20services.%20Could%20you%20please%20provide%20more%20details%3F"
           target="_blank"
           rel="noopener noreferrer"
           className="bg-[#25D366] text-white p-4 md:p-5 rounded-2xl md:rounded-[1.5rem] shadow-2xl shadow-green-500/40 hover-lift-modern border border-white/20 active:scale-90 transition-all duration-300 flex items-center justify-center group"
