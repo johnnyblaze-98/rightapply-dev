@@ -116,7 +116,7 @@ _Sent from RightApply.ai_`;
                     <MapPin className="w-6 h-6 md:w-8 md:h-8 text-white" />
                   </div>
                   <div>
-                    <h4 className="text-xl font-bold text-gray-900 mb-1">Our Headquarters</h4>
+                    {/* <h4 className="text-xl font-bold text-gray-900 mb-1">Our Headquarters</h4> */}
                     <p className="text-gray-500 text-sm mb-1 text-balance">Innovation Hub, Tech Park <br />Global City, DE 19808</p>
                   </div>
                 </div>

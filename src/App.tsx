@@ -1,4 +1,9 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { useState } from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { ReactLenis } from '@studio-freight/react-lenis';
+
+// Components
+import Loader from './components/Loader';
 
 // Page components
 import Home from './pages/Home';
@@ -8,16 +13,27 @@ import ResumeAIForm from './pages/ResumeAI/ResumeAIForm';
 import ResumeAIResults from './pages/ResumeAI/ResumeAIResults';
 
 function App() {
+  const [isLoading, setIsLoading] = useState(true);
+
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/registration" element={<RegistrationPage />} />
-        <Route path="/registration/thank-you" element={<ThankYouPage />} />
-        <Route path="/resume-ai" element={<ResumeAIForm />} />
-        <Route path="/resume-ai/results" element={<ResumeAIResults />} />
-      </Routes>
-    </BrowserRouter>
+    <>
+      {isLoading && <Loader onLoadingComplete={() => setIsLoading(false)} />}
+
+      <ReactLenis root>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/registration" element={<RegistrationPage />} />
+            <Route path="/registration/thank-you" element={<ThankYouPage />} />
+            <Route path="/resume-ai" element={<ResumeAIForm />} />
+            <Route path="/resume-ai/results" element={<ResumeAIResults />} />
+
+            {/* Catch-all route to redirect unknown paths (like /dashboard) back to home */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </BrowserRouter>
+      </ReactLenis>
+    </>
   );
 }
 

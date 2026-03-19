@@ -171,16 +171,19 @@
     transition: all 0.1s ease;
   }
 
-  /* Scroll animations */
+  /* Cinematic Premium Scroll Animations */
   .scroll-reveal {
     opacity: 0;
-    transform: translateY(50px);
-    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateY(40px) scale(0.96);
+    filter: blur(12px);
+    transition: all 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: opacity, transform, filter;
   }
 
   .scroll-reveal.revealed {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
+    filter: blur(0px);
   }
 
   /* Modern floating animation */
@@ -545,4 +548,26 @@
     transform: scale(1);
     box-shadow: 0 8px 32px rgba(20, 184, 166, 0.15);
   }
+}
+
+/* Lenis Smooth Scroll Recommended Styles */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
 }

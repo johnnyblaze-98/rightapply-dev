@@ -23,12 +23,6 @@ const Footer = () => {
       { name: 'Companies', href: '#companies' },
       { name: 'FAQ', href: '#faq' }
     ],
-    company: [
-      { name: 'About Us', href: '/about' },
-      { name: 'Careers', href: '/careers' },
-      { name: 'Success Stories', href: '/success' },
-      { name: 'Contact', href: '#contact' }
-    ],
     legal: [
       { name: 'Privacy Policy', href: '#' },
       { name: 'Terms of Service', href: '#' },
@@ -51,10 +45,10 @@ const Footer = () => {
       <div className="absolute top-0 right-[-5%] w-[400px] h-[400px] bg-teal-500/5 rounded-full blur-[100px]"></div>
 
       <div className="container-modern px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-12 lg:gap-16 mb-20">
+        <div className="flex flex-col lg:flex-row justify-between gap-12 lg:gap-16 mb-20">
 
           {/* Brand Info */}
-          <div className="lg:col-span-2">
+          <div className="lg:max-w-lg">
             <div className="flex items-center group cursor-pointer mb-8" onClick={scrollToTop}>
               <div className="h-12 md:h-16 w-48 md:w-64 flex items-center justify-start group-hover:scale-105 transition-all duration-300">
                 <img src="/logo.png" alt="RightApply Logo" className="h-full w-auto object-contain" onError={(e) => {
@@ -97,8 +91,8 @@ const Footer = () => {
           </div>
 
           {/* Links Grid */}
-          <div className="md:col-span-1 lg:col-span-4 grid grid-cols-2 gap-12">
-            <div>
+          <div className="flex lg:justify-end lg:pr-12">
+            <div className="min-w-[160px]">
               <h4 className="text-white font-black uppercase text-sm tracking-[0.2em] mb-8">Product</h4>
               <ul className="space-y-4">
                 {footerLinks.product.map(link => (
@@ -112,19 +106,7 @@ const Footer = () => {
               </ul>
             </div>
 
-            <div>
-              <h4 className="text-white font-black uppercase text-xs md:text-sm tracking-[0.2em] mb-6 md:mb-8">Company</h4>
-              <ul className="space-y-4">
-                {footerLinks.company.map(link => (
-                  <li key={link.name}>
-                    <a href={link.href} className="text-gray-400 hover:text-teal-400 font-bold transition-all duration-300 flex items-center group text-sm md:text-base">
-                      <span className="w-0 group-hover:w-2 h-[1px] bg-teal-400 mr-0 group-hover:mr-2 transition-all"></span>
-                      {link.name}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
+
 
             {/* Newsletter section hidden as requested */}
             {/* 
@@ -149,7 +131,7 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="flex items-center space-x-6">
-            <p className="text-gray-600 text-sm font-bold">&copy; 2026 Right apply-Ai private limited</p>
+            <p className="text-gray-600 text-sm font-bold">&copy; 2026 Rightapply-ai private limited</p>
             <div className="flex space-x-4">
               {footerLinks.legal.map(link => (
                 <a key={link.name} href={link.href} className="text-gray-600 hover:text-teal-400 text-xs font-black uppercase tracking-tighter transition-colors">

@@ -20,7 +20,7 @@ const Features = () => {
       icon: Zap,
       title: "Human-Led Applications",
       description: "Strategic applications submitted by our experts at optimal times. We handle the process from profile matching to final submission with a human touch.",
-      stats: "150+ Apps / Month",
+      stats: "2000+ Apps / Month",
       color: "violet"
     }
   ];
