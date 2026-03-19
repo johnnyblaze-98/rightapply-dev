@@ -1,7 +1,9 @@
 import { Target, Users, Star, Rocket, Globe, Brain } from 'lucide-react';
 import InfinityAnimation from '../animations/InfinityAnimation';
+import { useNavigate } from 'react-router-dom';
 
 const Hero = () => {
+  const navigate = useNavigate();
   return (
     <section id="home" className="relative min-h-screen section-bg-modern pt-32 pb-20 overflow-hidden">
       {/* Background Pattern */}
@@ -41,7 +43,7 @@ const Hero = () => {
             <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 mb-12">
               <button
                 className="modern-button !py-3 !px-8 text-sm md:text-base flex items-center space-x-2 w-full sm:w-auto justify-center"
-                onClick={() => window.location.href = '/registration'}
+                onClick={() => navigate('/registration')}
               >
                 <Rocket className="w-4 h-4 md:w-5 md:h-5" />
                 <span>Get Started Now</span>

@@ -1,6 +1,8 @@
 import { Users, Target, TrendingUp, Brain, Rocket, Globe } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const Benefits = () => {
+  const navigate = useNavigate();
   const advantages = [
     {
       id: "ai-intelligence",
@@ -122,7 +124,7 @@ const Benefits = () => {
               <p className="text-base md:text-lg text-gray-600 mb-10 font-medium max-w-2xl mx-auto">Our members average a 40% salary increase and 3x more interview callbacks within the first month.</p>
               <button
                 className="modern-button !py-4 !px-8 md:!px-12 text-base md:text-lg shadow-teal-modern w-full sm:w-auto"
-                onClick={() => window.location.href = '/registration'}
+                onClick={() => navigate('/registration')}
               >
                 Get Started Risk-Free
               </button>

@@ -1,6 +1,8 @@
 import { Brain, Target, Zap, Users, TrendingUp, Network, Sparkles } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const Features = () => {
+  const navigate = useNavigate();
   const mainFeatures = [
     {
       icon: Network,
@@ -123,7 +125,7 @@ const Features = () => {
                 <div className="flex justify-center lg:justify-start">
                   <button
                     className="bg-white hover:bg-teal-50 text-gray-900 font-bold py-4 px-10 rounded-2xl transition-all duration-300 flex items-center space-x-3 shadow-xl hover:-translate-y-1"
-                    onClick={() => window.location.href = '/registration'}
+                    onClick={() => navigate('/registration')}
                   >
                     <span>Build My Career Plan</span>
                     <TrendingUp className="w-5 h-5 text-teal-600" />

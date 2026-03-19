@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -22,9 +24,19 @@
   }
 
   body {
-    font-family: 'Inter', system-ui, sans-serif;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
     background: linear-gradient(135deg, #f0fdfa 0%, #f1f5f9 50%, #f0fdfa 100%);
     overflow-x: hidden;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  .font-display {
+    font-family: 'Outfit', system-ui, sans-serif;
   }
 
   /* Custom scrollbar */
@@ -570,4 +582,45 @@ html.lenis body {
 
 .lenis.lenis-smooth iframe {
   pointer-events: none;
+}
+
+/* Advanced Micro-Interactions */
+.card-hover-modern::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 500ms ease;
+  background: radial-gradient(600px circle at var(--mouse-x, 0) var(--mouse-y, 0),
+      rgba(20, 184, 166, 0.08),
+      transparent 40%);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.card-hover-modern:hover::after {
+  opacity: 1;
+}
+
+@keyframes slide-down-fade {
+  0% {
+    opacity: 0;
+    transform: translateY(-30px);
+    filter: blur(10px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0px);
+  }
+}
+
+.animate-stagger-nav {
+  animation: slide-down-fade 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  opacity: 0;
 }

@@ -65,7 +65,7 @@ const Header = () => {
                   <a
                     key={item.name}
                     href={item.href}
-                    className="group flex items-center text-gray-700 hover:text-teal-600 transition-all duration-300 font-medium relative"
+                    className="group flex items-center text-gray-700 hover:text-teal-600 transition-all duration-300 font-medium relative animate-stagger-nav"
                     style={{ animationDelay: `${index * 0.1}s` }}
                   >
                     <Icon className="w-4 h-4 mr-2 group-hover:text-teal-500 transition-all duration-300 group-hover:rotate-12" />
@@ -77,7 +77,8 @@ const Header = () => {
 
               <Link
                 to="/registration"
-                className="modern-button !py-2.5 !px-6 !text-sm flex items-center space-x-2"
+                className="modern-button !py-2.5 !px-6 !text-sm flex items-center space-x-2 animate-stagger-nav"
+                style={{ animationDelay: `${navItems.length * 0.1}s` }}
               >
                 <span>Get Started</span>
                 <TrendingUp className="w-4 h-4" />

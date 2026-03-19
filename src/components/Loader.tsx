@@ -1,19 +1,20 @@
 import { useEffect, useState } from 'react';
 
-const Loader = ({ onLoadingComplete }: { onLoadingComplete: () => void }) => {
+const Loader = ({ onLoadingComplete, onStartFading }: { onLoadingComplete: () => void, onStartFading?: () => void }) => {
     const [isFading, setIsFading] = useState(false);
 
     useEffect(() => {
         // Keep loader on screen for 1.8s for the full sequence
         const timer = setTimeout(() => {
             setIsFading(true);
+            if (onStartFading) onStartFading();
             setTimeout(() => {
                 onLoadingComplete();
             }, 600);
         }, 1800);
 
         return () => clearTimeout(timer);
-    }, [onLoadingComplete]);
+    }, [onLoadingComplete, onStartFading]);
 
     return (
         <div className={`fixed inset-0 z-[9999] bg-white flex flex-col items-center justify-center transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${isFading ? 'opacity-0 scale-105 pointer-events-none' : 'opacity-100 scale-100'}`}>

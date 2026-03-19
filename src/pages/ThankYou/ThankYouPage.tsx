@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import { CheckCircle, ArrowLeft, Target, Users, Brain, Sparkles } from 'lucide-react';
 import Header from '../../layouts/Header';
 import Footer from '../../layouts/Footer';
@@ -155,13 +155,13 @@ const ThankYouPage = () => {
 
           {/* Call to Action */}
           <div className="text-center">
-            <a
-              href="/"
+            <Link
+              to="/"
               className="inline-flex items-center justify-center space-x-3 text-lg font-bold py-4 px-8 bg-gradient-to-r from-orange-500 to-blue-600 text-white rounded-xl hover:from-orange-600 hover:to-blue-700 hover:shadow-2xl hover:shadow-blue-500/25 transform hover:-translate-y-1 transition-all duration-300"
             >
               <ArrowLeft className="w-6 h-6" />
               <span>Back to Home</span>
-            </a>
+            </Link>
           </div>
 
           {/* Footer Message */}
