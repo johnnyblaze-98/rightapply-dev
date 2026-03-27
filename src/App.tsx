@@ -1,90 +1,89 @@
-import React, { useEffect } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { ReactLenis } from '@studio-freight/react-lenis';
 
-// Import all existing components as before
-import Header from './components/Header';
-import Hero from './components/Hero';
-import Features from './components/Features';
-import Benefits from './components/Benefits';
-import Success from './components/Success';
-import Companies from './components/Companies';
-import Contact from './components/Contact';
-import Footer from './components/Footer';
+// Components
+import Loader from './components/Loader';
 
-// Registration components
-import RegistrationPage from './components/RegistrationPage';
-import ThankYouPage from './components/ThankYouPage';
-import ResumeAIForm from './components/ResumeAIForm';
-import ResumeAIResults from './components/ResumeAIResults';
+// Page components
+import Home from './pages/Home';
+import RegistrationPage from './pages/Registration/RegistrationPage';
+import ThankYouPage from './pages/ThankYou/ThankYouPage';
+import ResumeAIForm from './pages/ResumeAI/ResumeAIForm';
+import ResumeAIResults from './pages/ResumeAI/ResumeAIResults';
 
-function LandingPage() {
+const ScrollToTop = ({ triggerLoader }: { triggerLoader: () => void }) => {
+  const { pathname } = useLocation();
+  const [prev, setPrev] = useState(pathname);
+
   useEffect(() => {
-    // Scroll animation observer
-    const observerOptions = {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    if (pathname !== prev) {
+      if (pathname === '/registration') {
+        triggerLoader();
+      }
+      setPrev(pathname);
+    }
+  }, [pathname, prev, triggerLoader]);
+
+  return null;
+};
+
+function App() {
+  const [isLoading, setIsLoading] = useState(true);
+  const [appStarted, setAppStarted] = useState(false);
+
+  // Advanced Micro-Interactions (Mouse tracker & Parallax)
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      document.querySelectorAll('.card-hover-modern').forEach(card => {
+        const rect = card.getBoundingClientRect(),
+          x = e.clientX - rect.left,
+          y = e.clientY - rect.top;
+        (card as HTMLElement).style.setProperty("--mouse-x", `${x}px`);
+        (card as HTMLElement).style.setProperty("--mouse-y", `${y}px`);
+      });
     };
 
-    const observer = new window.IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('revealed');
-        }
-      });
-    }, observerOptions);
-
-    // Observe all scroll-reveal elements
-    const revealElements = document.querySelectorAll('.scroll-reveal');
-    revealElements.forEach(el => observer.observe(el));
-
-    // Parallax effect
     const handleScroll = () => {
-      const scrolled = window.pageYOffset;
-      const parallaxElements = document.querySelectorAll('.parallax-element');
-      parallaxElements.forEach(element => {
-        const speed = element.getAttribute('data-speed') || "0.5";
-        const yPos = -(scrolled * parseFloat(speed));
-        element.style.transform = `translateY(${yPos}px)`;
+      const scrolled = window.scrollY;
+      document.querySelectorAll('.blur-3xl').forEach((orb, index) => {
+        const speed = index % 2 === 0 ? 0.1 : -0.15;
+        (orb as HTMLElement).style.transform = `translateY(${scrolled * speed}px)`;
       });
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("scroll", handleScroll);
 
-    // Cleanup
     return () => {
-      observer.disconnect();
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
   return (
-    <div className="min-h-screen bg-white text-gray-900 overflow-x-hidden">
-      {/* <CustomCursor /> */}
-      <Header />
-      <main>
-        <Hero />
-        <Features />
-        <Benefits />
-        {/* <Success /> */}
-        <Companies />
-        <Contact />
-      </main>
-      <Footer />
-    </div>
-  );
-}
+    <>
+      {isLoading && <Loader onLoadingComplete={() => setIsLoading(false)} onStartFading={() => setAppStarted(true)} />}
 
-function App() {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/registration" element={<RegistrationPage />} />
-        <Route path="/registration/thank-you" element={<ThankYouPage />} />
-        <Route path="/resume-ai" element={<ResumeAIForm />} />
-        <Route path="/resume-ai/results" element={<ResumeAIResults />} />
-      </Routes>
-    </BrowserRouter>
+      {appStarted && (
+        <ReactLenis root>
+          <BrowserRouter>
+            <ScrollToTop triggerLoader={() => setIsLoading(true)} />
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/registration" element={<RegistrationPage />} />
+              <Route path="/registration/thank-you" element={<ThankYouPage />} />
+              <Route path="/resume-ai" element={<ResumeAIForm />} />
+              <Route path="/resume-ai/results" element={<ResumeAIResults />} />
+
+              {/* Catch-all route to redirect unknown paths (like /dashboard) back to home */}
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </BrowserRouter>
+        </ReactLenis>
+      )}
+    </>
   );
 }
 

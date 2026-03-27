@@ -8,6 +8,7 @@ export default defineConfig({
     exclude: ['lucide-react'],
   },
   server: {
+
     proxy: {
       '/api': {
         target: 'https://rei8kjm2yg.execute-api.us-east-1.amazonaws.com/Prod',
