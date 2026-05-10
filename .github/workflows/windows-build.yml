@@ -1,0 +1,49 @@
+name: Build Windows Release
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          path: repo
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.22.1'
+
+      - name: Debug: list repo and project files
+        run: |
+          echo "PWD: $(pwd)"
+          echo "Root listing:"; ls -la
+          echo "repo listing:"; ls -la repo || true
+          echo "Marketing Companion listing:"; ls -la "repo/Marketing Companion" || true
+          echo "pubspec content:"; cat "repo/Marketing Companion/pubspec.yaml" || true
+
+
+      - name: Enable windows desktop
+        run: cd repo/'Marketing Companion' && flutter config --enable-windows-desktop
+
+      - name: Install dependencies
+        run: cd repo/'Marketing Companion' && flutter pub get
+
+      - name: Analyze
+        run: cd repo/'Marketing Companion' && flutter analyze
+
+      - name: Run tests
+        run: cd repo/'Marketing Companion' && flutter test --coverage
+
+      - name: Build Windows release
+        run: cd repo/'Marketing Companion' && flutter build windows --release
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-release
+          path: Marketing Companion/build/windows/runner/Release
