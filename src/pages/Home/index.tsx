@@ -4,7 +4,7 @@ import Hero from '../../sections/Hero';
 import Features from '../../sections/Features';
 import Benefits from '../../sections/Benefits';
 import Companies from '../../sections/Companies';
-import GoogleReviews from '../../sections/GoogleReviews';
+// import GoogleReviews from '../../sections/GoogleReviews';
 import Contact from '../../sections/Contact';
 import FAQ from '../../sections/FAQ';
 import Footer from '../../layouts/Footer';
@@ -60,7 +60,7 @@ const Home = () => {
                 <Features />
                 <Benefits />
                 <Companies />
-                <GoogleReviews />
+                {/* <GoogleReviews /> */}
                 <Contact />
                 <FAQ />
             </main>
